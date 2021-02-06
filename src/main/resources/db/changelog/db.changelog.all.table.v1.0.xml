@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
+    <changeSet id="20210119-MB1" author="Maxim Bezmen">
+
+        <createTable tableName="account" remarks="Accounts of all users">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
+            </column>
+            <column name="user_name" type="varchar(50)" remarks="Name of user"/>
+            <column name="login" type="varchar(100)" remarks="Login of user"/>
+            <column name="email" type="varchar(100)" remarks="Email of user"/>
+            <column name="password" type="text" remarks="Password of user"/>
+            <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
+            <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
+        </createTable>
+
+    </changeSet>
+</databaseChangeLog>
