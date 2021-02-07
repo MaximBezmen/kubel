@@ -12,7 +12,8 @@
             <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
             </column>
-            <column name="user_name" type="varchar(50)" remarks="Name of user"/>
+            <column name="first_name" type="varchar(50)" remarks="First name of user"/>
+            <column name="last_name" type="varchar(50)" remarks="Last name of user"/>
             <column name="login" type="varchar(100)" remarks="Login of user"/>
             <column name="email" type="varchar(100)" remarks="Email of user"/>
             <column name="password" type="text" remarks="Password of user"/>

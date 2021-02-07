@@ -17,8 +17,10 @@ public class Account extends AbstractEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_id_seq")
     @SequenceGenerator(name = "account_id_seq", sequenceName = "account_id_seq", allocationSize = 1)
     private Long id;
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "lste_name")
+    private String lastName;
     @Column(name = "login")
     private String login;
     @Column(name = "email")
