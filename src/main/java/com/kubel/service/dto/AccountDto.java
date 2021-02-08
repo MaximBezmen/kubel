@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @PasswordMatches
 @ValidEmail
 public class AccountDto {
+    private Long id;
     @NotNull
     @NotEmpty
     private String firstName;

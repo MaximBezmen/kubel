@@ -17,6 +17,7 @@
             <column name="login" type="varchar(100)" remarks="Login of user"/>
             <column name="email" type="varchar(100)" remarks="Email of user"/>
             <column name="password" type="text" remarks="Password of user"/>
+            <column name="enabled" type="boolean" remarks="Enable account"/>
             <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
             <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
         </createTable>

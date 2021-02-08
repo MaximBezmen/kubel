@@ -58,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
             throw new UserAlreadyExistException(accountDto.getEmail());
         }
         Account accountEntity = accountMapper.toEntity(accountDto);
-        accountEntity.setPassword(passwordEncoder.encode(accountEntity.getPassword()));
+        accountEntity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         accountEntity = accountRepository.save(accountEntity);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, locale, appUrl));
         return accountMapper.toDto(accountEntity);
@@ -95,4 +95,9 @@ public class AccountServiceImpl implements AccountService {
         account.setEnabled(true);
         accountRepository.save(account);
     }
+
+//    @Override
+//    public AccountDto getUserLogin(AccountDto accountDto) {
+//        return null;
+//    }
 }

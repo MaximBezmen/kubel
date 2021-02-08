@@ -14,13 +14,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
     private AccountService accountService;
 
-    private MessageSource messages;
-
     private JavaMailSender mailSender;
 
-    public RegistrationListener(AccountService accountService, MessageSource messages, JavaMailSender mailSender) {
+    public RegistrationListener(AccountService accountService, JavaMailSender mailSender) {
         this.accountService = accountService;
-        this.messages = messages;
         this.mailSender = mailSender;
     }
 
@@ -37,12 +34,12 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         String recipientAddress = user.getEmail();
         String subject = "Registration Confirmation";
         String confirmationUrl = event.getAppUrl() + "/confirm?token=" + token;
-        String message = messages.getMessage("message.regSucc", null, event.getLocale());
+        //String message = messages.getMessage("message.regSucc", null, event.getLocale());
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText(message + "\r\n" + "http://localhost:8080" + confirmationUrl);
+        email.setText( "link: http://localhost:8080" + confirmationUrl);
         mailSender.send(email);
     }
 }

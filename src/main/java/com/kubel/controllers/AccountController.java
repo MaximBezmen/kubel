@@ -23,7 +23,7 @@ public class AccountController {
 
 
     @PostMapping("/user/registration")
-    public ResponseEntity<AccountDto> createAccount(@RequestBody @Valid final AccountDto accountDto, HttpServletRequest request) {
+    public ResponseEntity<AccountDto> registrationNewUser(@RequestBody @Valid final AccountDto accountDto, HttpServletRequest request) {
         String appUrl = request.getContextPath();
 
         return ResponseEntity.ok().body(accountService.registerNewUserAccount(accountDto, request.getLocale(), appUrl));
@@ -32,7 +32,11 @@ public class AccountController {
     @GetMapping("/confirm")
     public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token, HttpServletRequest request) {
         accountService.confirmRegistration(token, request.getLocale());
-        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:8080/user/login")).build();
+        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
     }
-
+//    @PostMapping("/user/login")
+//    public ResponseEntity<AccountDto> getUserLogin(@RequestBody @Valid final AccountDto accountDto) {
+//
+//        return ResponseEntity.ok().body(accountService.getUserLogin(accountDto));
+//    }
 }
