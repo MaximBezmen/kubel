@@ -3,10 +3,10 @@ package com.kubel.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kubel.entity.Account;
+import com.kubel.exception.CustomAuthenticationException;
+import com.kubel.exception.Forbidden;
 import com.kubel.service.dto.AccountDto;
-import com.kubel.service.mapper.AccountMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,17 +31,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         setFilterProcessesUrl("/user/login");
     }
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            {
         try {
             AccountDto accountDto = new ObjectMapper().readValue(request.getInputStream(), AccountDto.class);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                            accountDto.getLogin(),
-                            accountDto.getPassword(),
-                            new ArrayList<>()));
-        } catch (IOException e) {
-            throw new RuntimeException();
+                    accountDto.getLogin(),
+                    accountDto.getPassword(),
+                    new ArrayList<>()));
+        } catch (Forbidden e) {
+            throw new Forbidden();
         }
     }
 
@@ -54,8 +55,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(SECRET.getBytes()));
 
-        String body = ((UserPrincipal) authResult.getPrincipal()).getId() + " " + TOKEN_PREFIX+ token;
+        String body = ((UserPrincipal) authResult.getPrincipal()).getId() + " " + TOKEN_PREFIX + token;
         response.getWriter().write(body);
         response.getWriter().flush();
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+       new AuthenticationFailureHandler().onAuthenticationFailure(request,response,failed);
     }
 }

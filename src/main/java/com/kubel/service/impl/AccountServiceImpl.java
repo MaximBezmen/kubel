@@ -3,7 +3,7 @@ package com.kubel.service.impl;
 
 import com.kubel.entity.Account;
 import com.kubel.entity.VerificationToken;
-import com.kubel.exception.BadRequest;
+import com.kubel.exception.BadRequestException;
 import com.kubel.exception.ResourceNotFoundException;
 import com.kubel.exception.UserAlreadyExistException;
 import com.kubel.repo.AccountRepository;
@@ -56,6 +56,11 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> accountOptional = accountRepository.findByEmail(accountDto.getEmail());
         if (accountOptional.isPresent()) {
             throw new UserAlreadyExistException(accountDto.getEmail());
+        }else {
+           accountOptional = accountRepository.findByLogin(accountDto.getLogin());
+           if (accountOptional.isPresent()){
+               throw new UserAlreadyExistException(accountDto.getLogin());
+           }
         }
         Account accountEntity = accountMapper.toEntity(accountDto);
         accountEntity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
@@ -90,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = verificationToken.getAccount();
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            throw new BadRequest("Срок действия токина истек.");
+            throw new BadRequestException("Срок действия токина истек.");
         }
         account.setEnabled(true);
         accountRepository.save(account);
