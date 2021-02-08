@@ -2,6 +2,7 @@ package com.kubel.security;
 
 import com.kubel.entity.Account;
 import com.kubel.exception.BadRequestException;
+import com.kubel.exception.ResourceNotFoundException;
 import com.kubel.repo.AccountRepository;
 import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,4 +37,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         return UserPrincipal.create(accountOptional.get());
     }
 
+    @Transactional
+    public UserDetails loadUserById(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "id", id)
+        );
+        return UserPrincipal.create(account);
+    }
 }
