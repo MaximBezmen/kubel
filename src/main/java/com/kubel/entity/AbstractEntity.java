@@ -13,7 +13,7 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity implements Serializable {
     @CreatedDate
-    private Instant dataCreate;
+    private Instant createdDate;
     @LastModifiedDate
-    private Instant dataModified;
+    private Instant modifiedDate;
 }

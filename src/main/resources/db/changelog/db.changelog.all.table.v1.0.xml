@@ -10,13 +10,26 @@
 
         <createTable tableName="account" remarks="Accounts of all users">
             <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_account"/>
             </column>
             <column name="first_name" type="varchar(50)" remarks="First name of user"/>
             <column name="last_name" type="varchar(50)" remarks="Last name of user"/>
             <column name="login" type="varchar(100)" remarks="Login of user"/>
             <column name="email" type="varchar(100)" remarks="Email of user"/>
             <column name="password" type="text" remarks="Password of user"/>
+            <column name="enabled" type="boolean" remarks="Enable account"/>
+            <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
+            <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
+        </createTable>
+        <createTable tableName="verification_token" remarks="Verification tokens of accounts">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_verification_token"/>
+            </column>
+            <column name="expiry_date" type="date" remarks="Date create token"/>
+            <column name="token" type="text" remarks="Token of user"/>
+            <column name="account_id" type="bigint" remarks="Foreign key to account">
+                <constraints foreignKeyName="fk_account_id" references="account(id)"/>
+            </column>
             <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
             <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
         </createTable>
