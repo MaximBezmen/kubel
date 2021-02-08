@@ -14,7 +14,8 @@ public class AccountDto {
     @NotNull
     @NotEmpty
     private String firstName;
-
+    @NotNull
+    @NotEmpty
     private String login;
     @NotNull
     @NotEmpty
@@ -23,6 +24,8 @@ public class AccountDto {
     @NotNull
     @NotEmpty
     private String password;
+    @NotNull
+    @NotEmpty
     private String matchingPassword;
 
     @NotNull

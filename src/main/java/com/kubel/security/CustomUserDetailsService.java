@@ -1,7 +1,10 @@
 package com.kubel.security;
 
 import com.kubel.entity.Account;
+import com.kubel.exception.BadRequest;
 import com.kubel.repo.AccountRepository;
+import lombok.SneakyThrows;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,14 +21,17 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.accountRepository = accountRepository;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
 
         Optional<Account> accountOptional = accountRepository.findByEmail(email);
         if (accountOptional.isEmpty()) {
-            throw new UsernameNotFoundException(
-                    "No user found with username: " + email);
+            throw new UsernameNotFoundException("No user found with username: " + email);
+        }
+        if (!accountOptional.get().isEnabled()) {
+            throw new BadRequest("Профиль не активирован.");
         }
         return UserPrincipal.create(accountOptional.get());
     }
