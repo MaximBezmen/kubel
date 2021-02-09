@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,6 +32,8 @@ public class Account extends AbstractEntity {
     private boolean enabled;
     @OneToOne(mappedBy = "account")
     private VerificationToken verificationToken;
+    @OneToMany(mappedBy = "account")
+    private List<Ad> ads;
 
     @PrePersist
     private void setEnabled() {

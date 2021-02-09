@@ -1,9 +1,12 @@
 package com.kubel.controllers;
 
+import com.kubel.exception.Forbidden;
+import com.kubel.security.UserPrincipal;
 import com.kubel.service.AccountService;
 import com.kubel.service.dto.AccountDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +37,12 @@ public class AccountController {
         accountService.confirmRegistration(token, request.getLocale());
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
     }
-//    @PostMapping("/user/login")
-//    public ResponseEntity<AccountDto> getUserLogin(@RequestBody @Valid final AccountDto accountDto) {
-//
-//        return ResponseEntity.ok().body(accountService.getUserLogin(accountDto));
-//    }
+    @GetMapping("/user/{id}")
+    public ResponseEntity<AccountDto> getUserById(@PathVariable Long id, Authentication auth) {
+        var principal = (UserPrincipal)auth.getPrincipal();
+        if (!principal.getId().equals(id)){
+            throw new Forbidden();
+        }
+        return ResponseEntity.ok().body(accountService.getUserById(id));
+    }
 }

@@ -3,7 +3,6 @@ package com.kubel.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kubel.exception.CustomAuthenticationException;
 import com.kubel.exception.Forbidden;
 import com.kubel.service.dto.AccountDto;
 import lombok.SneakyThrows;
@@ -26,7 +25,7 @@ import static com.kubel.security.SecurityConstants.*;
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
         this.authenticationManager = authenticationManager;
         setFilterProcessesUrl("/user/login");
     }
