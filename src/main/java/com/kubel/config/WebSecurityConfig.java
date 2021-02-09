@@ -54,12 +54,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, CONFIRM_URL).permitAll()
                 .antMatchers(HttpMethod.POST, SING_UP_URL).permitAll()
+                .antMatchers(
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js",
+                        "/api-docs/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
                 .userDetailsService(customUserDetailsService)
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), customUserDetailsService))
-                .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(),customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
 
                 //this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

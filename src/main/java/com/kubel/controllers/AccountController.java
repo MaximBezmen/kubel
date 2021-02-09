@@ -37,10 +37,11 @@ public class AccountController {
         accountService.confirmRegistration(token, request.getLocale());
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
     }
+
     @GetMapping("/user/{id}")
     public ResponseEntity<AccountDto> getUserById(@PathVariable Long id, Authentication auth) {
-        var principal = (UserPrincipal)auth.getPrincipal();
-        if (!principal.getId().equals(id)){
+        var principal = (UserPrincipal) auth.getPrincipal();
+        if (!principal.getId().equals(id)) {
             throw new Forbidden();
         }
         return ResponseEntity.ok().body(accountService.getUserById(id));
