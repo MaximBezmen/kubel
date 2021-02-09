@@ -24,11 +24,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     @SneakyThrows
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String email) {
+    public UserDetails loadUserByUsername(String login) {
 
-        Optional<Account> accountOptional = accountRepository.findByLogin(email);
+        Optional<Account> accountOptional = accountRepository.findByLogin(login);
         if (accountOptional.isEmpty()) {
-            throw new UsernameNotFoundException("No user found with username: " + email);
+            throw new UsernameNotFoundException("No user found with username: " + login);
         }
         if (!accountOptional.get().isEnabled()) {
             throw new BadRequestException("Профиль не активирован.");

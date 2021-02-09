@@ -1,5 +1,6 @@
 package com.kubel.controllers;
 
+import com.kubel.exception.Forbidden;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AccountService;
 import com.kubel.service.dto.AccountDto;
@@ -38,7 +39,10 @@ public class AccountController {
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<AccountDto> getUserById(@PathVariable Long id, Authentication auth) {
-        var p = (UserPrincipal) auth.getPrincipal();
+        var principal = (UserPrincipal)auth.getPrincipal();
+        if (!principal.getId().equals(id)){
+            throw new Forbidden();
+        }
         return ResponseEntity.ok().body(accountService.getUserById(id));
     }
 }

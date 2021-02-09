@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = false)
 @Entity
-public class VerificationToken {
+public class VerificationToken extends AbstractEntity {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
