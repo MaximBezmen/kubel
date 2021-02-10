@@ -29,6 +29,8 @@ public class Ad extends AbstractEntity {
     private String city;
     @ManyToOne
     private Account account;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @PrePersist
     private void setDateOfPlacementAndValidity(){

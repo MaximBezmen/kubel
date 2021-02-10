@@ -42,6 +42,7 @@
             <column name="validity" type="date" remarks="Validity of ad"/>
             <column name="content" type="text" remarks="Content of ad"/>
             <column name="city" type="varchar(50)" remarks="City of ad"/>
+            <column name="phone_number" type="varchar(50)" remarks="Phone number of ad"/>
             <column name="account_id" type="bigint" remarks="Foreign key to account">
                 <constraints foreignKeyName="fk_account_id" references="account(id)"/>
             </column>
