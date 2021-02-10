@@ -5,7 +5,6 @@ import com.kubel.valid.ValidEmail;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,8 +19,8 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, Object> {
     public void initialize(ValidEmail constraintAnnotation) {
     }
 
-        @Override
-    public boolean isValid(Object obj, ConstraintValidatorContext context){
+    @Override
+    public boolean isValid(Object obj, ConstraintValidatorContext context) {
         pattern = Pattern.compile(EMAIL_PATTERN);
         AccountDto accountDto = (AccountDto) obj;
         matcher = pattern.matcher(accountDto.getEmail());

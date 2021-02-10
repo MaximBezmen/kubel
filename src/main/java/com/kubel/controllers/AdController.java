@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class AdController {
 
@@ -21,7 +23,7 @@ public class AdController {
     }
 
     @PostMapping("user/{id}/ad")
-    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @RequestBody AdDto adDto, final Authentication auth){
+    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @RequestBody @Valid AdDto adDto, final Authentication auth){
         var principal = (UserPrincipal)auth.getPrincipal();
         if (!principal.getId().equals(id)){
             throw new Forbidden();
