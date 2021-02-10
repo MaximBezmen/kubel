@@ -25,7 +25,7 @@ public class AccountController {
     }
 
 
-    @PostMapping("/user/registration")
+    @PostMapping("/users/registration")
     public ResponseEntity<AccountDto> registrationNewUser(@RequestBody @Valid final AccountDto accountDto, HttpServletRequest request) {
         String appUrl = request.getContextPath();
 
@@ -38,7 +38,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<AccountDto> getUserById(@PathVariable Long id, Authentication auth) {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(id)) {

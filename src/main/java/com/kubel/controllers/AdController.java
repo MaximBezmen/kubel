@@ -22,7 +22,7 @@ public class AdController {
         this.adService = adService;
     }
 
-    @PostMapping("user/{id}/ad")
+    @PostMapping("users/{id}/ads")
     public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @RequestBody @Valid AdDto adDto, final Authentication auth){
         var principal = (UserPrincipal)auth.getPrincipal();
         if (!principal.getId().equals(id)){
