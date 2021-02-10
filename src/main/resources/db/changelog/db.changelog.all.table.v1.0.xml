@@ -21,6 +21,7 @@
             <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
             <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
         </createTable>
+
         <createTable tableName="verification_token" remarks="Verification tokens of accounts">
             <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_verification_token"/>
@@ -43,6 +44,21 @@
             <column name="content" type="text" remarks="Content of ad"/>
             <column name="city" type="varchar(50)" remarks="City of ad"/>
             <column name="phone_number" type="varchar(50)" remarks="Phone number of ad"/>
+            <column name="account_id" type="bigint" remarks="Foreign key to account">
+                <constraints foreignKeyName="fk_account_id" references="account(id)"/>
+            </column>
+            <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
+            <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
+        </createTable>
+
+        <createTable tableName="message" remarks="Message of ad">
+            <column name="id" type="bigint" remarks="Unique identificator">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_massage"/>
+            </column>
+            <column name="message" type="varchar(300)" remarks="Message of user"/>
+            <column name="ad_id" type="bigint" remarks="Foreign key to ad">
+                <constraints foreignKeyName="fk_ad_id" references="ad(id)"/>
+            </column>
             <column name="account_id" type="bigint" remarks="Foreign key to account">
                 <constraints foreignKeyName="fk_account_id" references="account(id)"/>
             </column>

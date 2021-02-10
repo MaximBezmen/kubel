@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +32,8 @@ public class Ad extends AbstractEntity {
     private Account account;
     @Column(name = "phone_number")
     private String phoneNumber;
+    @OneToMany(mappedBy = "ad")
+    private List<Message> messages;
 
     @PrePersist
     private void setDateOfPlacementAndValidity(){
