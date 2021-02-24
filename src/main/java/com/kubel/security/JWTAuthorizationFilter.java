@@ -25,10 +25,10 @@ import java.io.IOException;
 import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    @Autowired
+
     private CustomUserDetailsService customUserDetailsService;
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
+    public JWTAuthorizationFilter( CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
 

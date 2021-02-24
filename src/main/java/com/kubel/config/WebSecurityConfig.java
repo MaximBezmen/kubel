@@ -1,5 +1,6 @@
 package com.kubel.config;
 
+import com.kubel.security.AuthenticationFailureHandler;
 import com.kubel.security.CustomUserDetailsService;
 import com.kubel.security.JWTAuthenticationFilter;
 import com.kubel.security.JWTAuthorizationFilter;
@@ -68,9 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated()
                 .and()
                 .userDetailsService(customUserDetailsService)
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(), customUserDetailsService))
-                .addFilterBefore(new JWTAuthorizationFilter(authenticationManager(), customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
-
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilterBefore(new JWTAuthorizationFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
                 //this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
