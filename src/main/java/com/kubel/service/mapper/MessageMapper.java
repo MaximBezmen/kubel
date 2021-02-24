@@ -5,7 +5,7 @@ import com.kubel.service.dto.MessageDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper
+@Mapper(uses = {AccountMapper.class, AdMapper.class})
 public interface MessageMapper {
 
     @Mapping(target = "adId", source = "ad.id")

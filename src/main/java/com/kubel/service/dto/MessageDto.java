@@ -8,6 +8,6 @@ import lombok.Data;
 public class MessageDto {
     private Long id;
     private String message;
-    private Ad adId;
-    private Account accountId;
+    private Long adId;
+    private Long accountId;
 }
