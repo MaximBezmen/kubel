@@ -18,7 +18,7 @@ import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    private CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     public JWTAuthorizationFilter(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
