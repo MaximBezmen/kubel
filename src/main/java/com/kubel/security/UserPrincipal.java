@@ -25,7 +25,7 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal create(Account user) {
         List<GrantedAuthority> authorities = Collections.
-                singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+                singletonList(new SimpleGrantedAuthority(user.getRole().getRoleName().name()));
 
         return new UserPrincipal(
                 user.getId(),

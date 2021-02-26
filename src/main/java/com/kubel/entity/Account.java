@@ -34,6 +34,9 @@ public class Account extends AbstractEntity {
     private VerificationToken verificationToken;
     @OneToMany(mappedBy = "account")
     private List<Ad> ads;
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @PrePersist
     private void setEnabled() {
