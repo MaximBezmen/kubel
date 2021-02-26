@@ -2,6 +2,7 @@ package com.kubel.service.impl;
 
 
 import com.kubel.entity.Account;
+import com.kubel.entity.Role;
 import com.kubel.entity.VerificationToken;
 import com.kubel.exception.BadRequestException;
 import com.kubel.exception.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import com.kubel.service.AccountService;
 import com.kubel.service.OnRegistrationCompleteEvent;
 import com.kubel.service.dto.AccountDto;
 import com.kubel.service.mapper.AccountMapper;
+import com.kubel.types.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -64,6 +66,9 @@ public class AccountServiceImpl implements AccountService {
         }
         Account accountEntity = accountMapper.toEntity(accountDto);
         accountEntity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        Role roleEntity = new Role();
+        roleEntity.setRoleName(RoleType.USER);
+        accountEntity.setRole(roleEntity);
         accountEntity = accountRepository.save(accountEntity);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, locale, appUrl));
         return accountMapper.toDto(accountEntity);

@@ -20,7 +20,7 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping("users/{userId}/ads/{id}messages")
+    @PostMapping("users/{userId}/ads/{id}/messages")
     public ResponseEntity<MessageDto> crateMessageByUserIdAndByAd(@PathVariable final Long userId, @PathVariable final Long id, @RequestBody final MessageDto dto, final Authentication auth) {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(userId)){
