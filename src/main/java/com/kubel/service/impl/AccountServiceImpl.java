@@ -8,6 +8,7 @@ import com.kubel.exception.BadRequestException;
 import com.kubel.exception.ResourceNotFoundException;
 import com.kubel.exception.UserAlreadyExistException;
 import com.kubel.repo.AccountRepository;
+import com.kubel.repo.RoleRepository;
 import com.kubel.repo.VerificationTokenRepository;
 import com.kubel.service.AccountService;
 import com.kubel.service.OnRegistrationCompleteEvent;
@@ -33,19 +34,21 @@ public class AccountServiceImpl implements AccountService {
     private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper, ApplicationEventPublisher eventPublisher, VerificationTokenRepository tokenRepository, PasswordEncoder passwordEncoder) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper, ApplicationEventPublisher eventPublisher, VerificationTokenRepository tokenRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
         this.eventPublisher = eventPublisher;
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public AccountDto getUserByLoginAndPassword(AccountDto accountDto) {
         Optional<Account> accountOptional = accountRepository.findByLoginAndPassword(accountDto.getLogin(), accountDto.getPassword());
-        if (!accountOptional.isPresent()) {
+        if (accountOptional.isEmpty()) {
             logger.info("User with not found.");
             throw new ResourceNotFoundException("User with not found.");
         }
@@ -66,8 +69,8 @@ public class AccountServiceImpl implements AccountService {
         }
         Account accountEntity = accountMapper.toEntity(accountDto);
         accountEntity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        Role roleEntity = new Role();
-        roleEntity.setRoleName(RoleType.USER);
+        Role roleEntity = roleRepository.findByRoleName(RoleType.USER).orElseThrow(
+                ()-> new ResourceNotFoundException("Role user not found."));
         accountEntity.setRole(roleEntity);
         accountEntity = accountRepository.save(accountEntity);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, locale, appUrl));

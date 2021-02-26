@@ -6,10 +6,11 @@ import com.kubel.utils.InstantMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {InstantMapper.class, Account.class})
+@Mapper(uses = {InstantMapper.class})
 public interface AccountMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "matchingPassword", ignore = true)
+    @Mapping(target = "role", source = "role.roleName")
     AccountDto toDto(Account entity);
 
     @Mapping(target = "id", ignore = true)

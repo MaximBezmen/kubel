@@ -52,7 +52,7 @@
         </createTable>
 
         <createTable tableName="message" remarks="Message of ad">
-            <column name="id" type="bigint" remarks="Unique identificator">
+            <column name="id" type="bigint" autoIncrement="true" remarks="Unique identificator">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_massage"/>
             </column>
             <column name="message" type="varchar(300)" remarks="Message of user"/>
@@ -69,13 +69,23 @@
     </changeSet>
     <changeSet id="2020224-MB1" author="Maxim Bezmen">
         <createTable tableName="role" remarks="Role of user">
-            <column name="id" type="bigint" remarks="Unique identificator">
+            <column name="id" type="bigint"  autoIncrement="true" remarks="Unique identificator">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role"/>
             </column>
             <column name="role_name" type="varchar(20)" remarks="Type of role"/>
             <column name="modified_date" type="datetime" remarks="date update info" autoIncrement="false"/>
             <column name="created_date" type="datetime" remarks="date create info" autoIncrement="false"/>
         </createTable>
+        <insert tableName="role">
+            <column name="role_name" value="USER"/>
+            <column name="created_date" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modified_date" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="role">
+            <column name="role_name" value="ADMIN"/>
+            <column name="created_date" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="modified_date" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
         <addColumn tableName="account">
             <column name="role_id" type="bigint" remarks="Foreign key to role">
                 <constraints foreignKeyName="fk_role_id" references="role(id)"/>

@@ -1,5 +1,6 @@
 package com.kubel.service.dto;
 
+import com.kubel.types.RoleType;
 import com.kubel.valid.PasswordMatches;
 import com.kubel.valid.ValidEmail;
 import lombok.Data;
@@ -21,15 +22,15 @@ public class AccountDto {
     @NotNull
     @NotEmpty
     private String lastName;
-
     @NotNull
     @NotEmpty
     private String password;
     @NotNull
     @NotEmpty
     private String matchingPassword;
-
     @NotNull
     @NotEmpty
     private String email;
+
+    private RoleType role;
 }
