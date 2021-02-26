@@ -27,9 +27,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) {
 
         Optional<Account> accountOptional = accountRepository.findByLogin(login);
+        if (accountOptional.isEmpty()){
+            accountOptional = accountRepository.findByEmail(login);
+        }
         if (accountOptional.isEmpty()) {
             throw new UsernameNotFoundException("No user found with username: " + login);
         }
+
         if (!accountOptional.get().isEnabled()) {
             throw new BadRequestException("Профиль не активирован.");
         }
