@@ -33,8 +33,8 @@ public class AccountController {
     }
 
     @GetMapping("/confirm")
-    public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token, HttpServletRequest request) {
-        accountService.confirmRegistration(token, request.getLocale());
+    public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token) {
+        accountService.confirmRegistration(token);
         return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
     }
 

@@ -15,7 +15,7 @@ public interface AccountService {
 
     void createVerificationToken(Account account, String token);
 
-    void confirmRegistration(String token, Locale locale);
+    void confirmRegistration(String token);
 
 //    AccountDto getUserLogin(AccountDto accountDto);
 }

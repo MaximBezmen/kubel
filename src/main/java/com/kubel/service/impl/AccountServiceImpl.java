@@ -95,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void confirmRegistration(String token, Locale locale) {
+    public void confirmRegistration(String token) {
         VerificationToken verificationToken = tokenRepository.findByToken(token);
         if (verificationToken == null) {
             throw new ResourceNotFoundException(token);
