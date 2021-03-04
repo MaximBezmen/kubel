@@ -1,8 +1,8 @@
 package com.kubel.service;
 
 import com.kubel.entity.Account;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -12,9 +12,11 @@ import java.util.UUID;
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    @Value("${server.link}")
+    private String server;
 
     public RegistrationListener(AccountService accountService, JavaMailSender mailSender) {
         this.accountService = accountService;
@@ -39,7 +41,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText( "link: http://localhost:8080" + confirmationUrl);
+        email.setText("link: " + server + confirmationUrl);
         mailSender.send(email);
     }
 }
