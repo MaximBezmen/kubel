@@ -16,7 +16,7 @@
 	<description>project kubel</description>
 
 	<properties>
-		<java.version>14</java.version>
+		<java.version>11</java.version>
 		<mapstruct.version>1.4.1.Final</mapstruct.version>
 	</properties>
 
