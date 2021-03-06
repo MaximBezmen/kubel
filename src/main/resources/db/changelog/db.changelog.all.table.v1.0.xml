@@ -100,4 +100,9 @@
           <where>email='maxim.bezmen@gmail.com'</where>
       </update>
     </changeSet>
+    <changeSet id="20200306-MB1" author="Maxim Bezmen">
+        <addColumn tableName="ad">
+            <column name="active" type="boolean" remarks="Validity of Ad"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -34,11 +34,15 @@ public class Ad extends AbstractEntity {
     private String phoneNumber;
     @OneToMany(mappedBy = "ad")
     private List<Message> messages;
+    @Column(name = "active")
+    private Boolean active;
+
 
     @PrePersist
     private void setDateOfPlacementAndValidity(){
         dateOfPlacement = LocalDate.now();
-        validity = dateOfPlacement.plusDays(30);
+        validity = dateOfPlacement.plusDays(31);
+        active = true;
     }
 
 }

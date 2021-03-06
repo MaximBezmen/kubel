@@ -8,7 +8,12 @@ import com.kubel.repo.AdRepository;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.mapper.AdMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class AdServiceImpl implements AdService {
@@ -30,5 +35,19 @@ public class AdServiceImpl implements AdService {
                 () -> new ResourceNotFoundException("Account", "id", id));
         adEntity.setAccount(accountEntity);
         return adMapper.toDto(adRepository.save(adEntity));
+    }
+
+    @Scheduled(cron = "* 0 0 * * ?", zone = "Europe/Minsk")
+    private void checkValidityAd() {
+        List<Ad> adList = adRepository.findAllByActiveTrue();
+        LocalDate today = LocalDate.now(ZoneId.of("Europe/Minsk"));
+        if ((!adList.isEmpty()) || (adList != null)) {
+            adList.forEach(ad -> {
+                if (ad.getValidity().isEqual(today)) {
+                    ad.setActive(false);
+                    adRepository.save(ad);
+                }
+            });
+        }
     }
 }
