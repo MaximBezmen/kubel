@@ -4,6 +4,9 @@ import com.kubel.exception.Forbidden;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AccountService;
 import com.kubel.service.dto.AccountDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -45,5 +48,10 @@ public class AccountController {
             throw new Forbidden();
         }
         return ResponseEntity.ok().body(accountService.getUserById(id));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<Page<AccountDto>> getAllUsersForAdmin(@PageableDefault Pageable pageable){
+        return ResponseEntity.ok().body(accountService.getAllUsersForAdmin(pageable));
     }
 }

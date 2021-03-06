@@ -18,6 +18,8 @@ import com.kubel.types.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,16 +63,16 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> accountOptional = accountRepository.findByEmail(accountDto.getEmail());
         if (accountOptional.isPresent()) {
             throw new UserAlreadyExistException(accountDto.getEmail());
-        }else {
-           accountOptional = accountRepository.findByLogin(accountDto.getLogin());
-           if (accountOptional.isPresent()){
-               throw new UserAlreadyExistException(accountDto.getLogin());
-           }
+        } else {
+            accountOptional = accountRepository.findByLogin(accountDto.getLogin());
+            if (accountOptional.isPresent()) {
+                throw new UserAlreadyExistException(accountDto.getLogin());
+            }
         }
         Account accountEntity = accountMapper.toEntity(accountDto);
         accountEntity.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         Role roleEntity = roleRepository.findByRoleName(RoleType.USER).orElseThrow(
-                ()-> new ResourceNotFoundException("Role user not found."));
+                () -> new ResourceNotFoundException("Role user not found."));
         accountEntity.setRole(roleEntity);
         accountEntity = accountRepository.save(accountEntity);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, locale, appUrl));
@@ -109,7 +111,13 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
     }
 
-//    @Override
+    @Override
+    public Page<AccountDto> getAllUsersForAdmin(Pageable pageable) {
+        Page<Account> accountPage = accountRepository.findAll(pageable);
+        return accountPage.map(accountMapper::toDto);
+    }
+
+    //    @Override
 //    public AccountDto getUserLogin(AccountDto accountDto) {
 //        return null;
 //    }

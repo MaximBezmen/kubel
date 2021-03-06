@@ -92,4 +92,12 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="2020305-MB1" author="Maxim Bezmen">
+      <update catalogName="liquibase"
+              schemaName="public"
+              tableName="account">
+          <column name="role_id"  valueComputed="(SELECT id FROM role WHERE role_name='ADMIN')"/>
+          <where>email='maxim.bezmen@gmail.com'</where>
+      </update>
+    </changeSet>
 </databaseChangeLog>
