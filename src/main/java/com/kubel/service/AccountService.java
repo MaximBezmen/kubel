@@ -2,6 +2,7 @@ package com.kubel.service;
 
 import com.kubel.entity.Account;
 import com.kubel.service.dto.AccountDto;
+import com.kubel.service.dto.PasswordDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,7 +12,7 @@ public interface AccountService {
 
     AccountDto getUserByLoginAndPassword(AccountDto accountDto);
 
-    AccountDto registerNewUserAccount(AccountDto accountDto, Locale locale, String appUrl);
+    AccountDto registerNewUserAccount(AccountDto accountDto);
 
     AccountDto getUserById(Long id);
 
@@ -21,5 +22,11 @@ public interface AccountService {
 
     Page<AccountDto> getAllUsersForAdmin(Pageable pageable);
 
-//    AccountDto getUserLogin(AccountDto accountDto);
+    String resetPassword(String email);
+
+    void createPasswordResetTokenForUser(Account user, String token);
+
+    String confirmChangePassword(String token);
+
+    void saveNewPassword(PasswordDto passwordDto);
 }

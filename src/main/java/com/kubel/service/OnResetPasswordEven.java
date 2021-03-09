@@ -7,12 +7,11 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class OnRegistrationCompleteEvent extends ApplicationEvent {
+public class OnResetPasswordEven extends ApplicationEvent {
     private Account account;
 
-    public OnRegistrationCompleteEvent(Account account) {
+    public OnResetPasswordEven(Account account) {
         super(account);
         this.account = account;
-
     }
 }

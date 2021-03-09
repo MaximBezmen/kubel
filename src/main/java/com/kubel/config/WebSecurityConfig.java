@@ -53,8 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, CONFIRM_URL).permitAll()
-                .antMatchers(HttpMethod.POST, SING_UP_URL).permitAll()
+                .antMatchers(HttpMethod.GET, CONFIRM_URL,"/user/resetPassword*",
+                        "/user/changePassword*").permitAll()
+                .antMatchers(HttpMethod.POST, SING_UP_URL, "/user/savePassword").permitAll()
                 .antMatchers(
                         "/**/*.png",
                         "/**/*.gif",

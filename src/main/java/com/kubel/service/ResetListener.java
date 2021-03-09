@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class ResetListener implements ApplicationListener<OnResetPasswordEven> {
 
     private final AccountService accountService;
 
@@ -18,29 +18,30 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     @Value("${server.link}")
     private String server;
 
-    public RegistrationListener(AccountService accountService, JavaMailSender mailSender) {
+    public ResetListener(AccountService accountService, JavaMailSender mailSender) {
         this.accountService = accountService;
         this.mailSender = mailSender;
     }
 
     @Override
-    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+    public void onApplicationEvent(OnResetPasswordEven event) {
         this.confirmRegistration(event);
     }
 
-    private void confirmRegistration(OnRegistrationCompleteEvent event) {
+    private void confirmRegistration(OnResetPasswordEven event) {
         Account user = event.getAccount();
         String token = UUID.randomUUID().toString();
-        accountService.createVerificationToken(user, token);
+        accountService.createPasswordResetTokenForUser(user, token);
 
         String recipientAddress = user.getEmail();
-        String subject = "Registration Confirmation";
-        String confirmationUrl = server + "/confirm?token=" + token;
+        String subject = "Reset Password Confirmation";
+        String resetUrl = server + "/user/changePassword?token=" + token;
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
-        email.setText("Confirm registration on the site \"Plushkin\" follow the link: " + confirmationUrl);
+        email.setText("Reset password on the site \"Plushkin\" follow the link: " + resetUrl);
         mailSender.send(email);
     }
 }
+

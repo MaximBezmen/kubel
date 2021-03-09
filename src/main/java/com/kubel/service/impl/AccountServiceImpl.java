@@ -12,7 +12,9 @@ import com.kubel.repo.RoleRepository;
 import com.kubel.repo.VerificationTokenRepository;
 import com.kubel.service.AccountService;
 import com.kubel.service.OnRegistrationCompleteEvent;
+import com.kubel.service.OnResetPasswordEven;
 import com.kubel.service.dto.AccountDto;
+import com.kubel.service.dto.PasswordDto;
 import com.kubel.service.mapper.AccountMapper;
 import com.kubel.types.RoleType;
 import org.slf4j.Logger;
@@ -25,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public AccountDto registerNewUserAccount(AccountDto accountDto, Locale locale, String appUrl) {
+    public AccountDto registerNewUserAccount(AccountDto accountDto) {
         Optional<Account> accountOptional = accountRepository.findByEmail(accountDto.getEmail());
         if (accountOptional.isPresent()) {
             throw new UserAlreadyExistException(accountDto.getEmail());
@@ -75,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
                 () -> new ResourceNotFoundException("Role user not found."));
         accountEntity.setRole(roleEntity);
         accountEntity = accountRepository.save(accountEntity);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity, locale, appUrl));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(accountEntity));
         return accountMapper.toDto(accountEntity);
     }
 
@@ -117,8 +118,51 @@ public class AccountServiceImpl implements AccountService {
         return accountPage.map(accountMapper::toDto);
     }
 
-    //    @Override
-//    public AccountDto getUserLogin(AccountDto accountDto) {
-//        return null;
-//    }
+    @Override
+    public String resetPassword(String email) {
+        Account accountEntity = accountRepository.findByEmail(email).orElseThrow(() ->
+                new ResourceNotFoundException("Account", "email", email));
+        eventPublisher.publishEvent(new OnResetPasswordEven(accountEntity));
+        return null;
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(Account user, String token) {
+        VerificationToken myToken = tokenRepository.findByAccountId(user.getId()).orElseThrow(() ->
+                new ResourceNotFoundException("Account", "id", user.getId()));
+        myToken.setToken(token);
+        myToken.setAccount(user);
+        tokenRepository.save(myToken);
+    }
+
+    @Override
+    public String confirmChangePassword(String token) {
+        VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            throw new ResourceNotFoundException(token);
+        }
+        Account accountEntity = verificationToken.getAccount();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            throw new BadRequestException("Срок действия токина истек.");
+        }
+        accountEntity.setEnabled(true);
+        accountRepository.save(accountEntity);
+        return token;
+    }
+
+    @Override
+    public void saveNewPassword(PasswordDto passwordDto) {
+        VerificationToken verificationToken = tokenRepository.findByToken(passwordDto.getToken());
+        if (verificationToken == null) {
+            throw new ResourceNotFoundException(passwordDto.getToken());
+        }
+        Account accountEntity = verificationToken.getAccount();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            throw new BadRequestException("Срок действия токина истек.");
+        }
+        accountEntity.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
+        accountRepository.save(accountEntity);
+    }
 }

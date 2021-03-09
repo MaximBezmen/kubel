@@ -4,6 +4,7 @@ import com.kubel.exception.ForbiddenException;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AccountService;
 import com.kubel.service.dto.AccountDto;
+import com.kubel.service.dto.PasswordDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,9 +31,7 @@ public class AccountController {
 
     @PostMapping("/users/registration")
     public ResponseEntity<AccountDto> registrationNewUser(@RequestBody @Valid final AccountDto accountDto, HttpServletRequest request) {
-        String appUrl = request.getContextPath();
-
-        return ResponseEntity.ok().body(accountService.registerNewUserAccount(accountDto, request.getLocale(), appUrl));
+        return ResponseEntity.ok().body(accountService.registerNewUserAccount(accountDto));
     }
 
     @GetMapping("/confirm")
@@ -51,7 +50,25 @@ public class AccountController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Page<AccountDto>> getAllUsersForAdmin(@PageableDefault Pageable pageable){
+    public ResponseEntity<Page<AccountDto>> getAllUsersForAdmin(@PageableDefault Pageable pageable) {
         return ResponseEntity.ok().body(accountService.getAllUsersForAdmin(pageable));
+    }
+
+    @GetMapping("/user/resetPassword")
+    public ResponseEntity resetPassword(@RequestParam String email) {
+        accountService.resetPassword(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/changePassword")
+    public ResponseEntity<String> confirmChangePassword(@RequestParam String token){
+        accountService.confirmChangePassword(token);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/user/savePassword")
+    public ResponseEntity saveNewPassword(@RequestBody PasswordDto passwordDto){
+        accountService.saveNewPassword(passwordDto);
+        return ResponseEntity.ok().build();
     }
 }
