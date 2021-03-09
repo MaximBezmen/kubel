@@ -105,4 +105,9 @@
             <column name="active" type="boolean" remarks="Validity of Ad"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20200309" author="Maxim Bezmen">
+        <addColumn tableName="ad">
+            <column name="price" type="bigint" remarks="Price of ad"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

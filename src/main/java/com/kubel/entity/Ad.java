@@ -28,6 +28,8 @@ public class Ad extends AbstractEntity {
     private String content;
     @Column(name = "city")
     private String city;
+    @Column(name = "price")
+    private Long price;
     @ManyToOne
     private Account account;
     @Column(name = "phone_number")
