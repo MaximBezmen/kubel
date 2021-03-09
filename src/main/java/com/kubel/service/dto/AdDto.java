@@ -16,5 +16,6 @@ public class AdDto {
     private String content;
     private String city;
     private String phoneNumber;
+    private Long price;
     private Long accountId;
 }

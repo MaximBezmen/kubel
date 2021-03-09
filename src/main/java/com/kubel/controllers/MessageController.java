@@ -1,6 +1,6 @@
 package com.kubel.controllers;
 
-import com.kubel.exception.Forbidden;
+import com.kubel.exception.ForbiddenException;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.MessageService;
 import com.kubel.service.dto.MessageDto;
@@ -24,7 +24,7 @@ public class MessageController {
     public ResponseEntity<MessageDto> crateMessageByUserIdAndByAd(@PathVariable final Long userId, @PathVariable final Long id, @RequestBody final MessageDto dto, final Authentication auth) {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(userId)){
-            throw new Forbidden();
+            throw new ForbiddenException();
         }
         return ResponseEntity.ok().body(messageService.crateMessageByUserIdAndByAd(userId, id, dto));
     }

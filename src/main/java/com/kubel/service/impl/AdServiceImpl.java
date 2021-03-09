@@ -8,6 +8,8 @@ import com.kubel.repo.AdRepository;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.mapper.AdMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +51,11 @@ public class AdServiceImpl implements AdService {
                 }
             });
         }
+    }
+
+    @Override
+    public Page<AdDto> getAllAd(Pageable pageable) {
+        Page<Ad> adPage = adRepository.findAll(pageable);
+        return adPage.map(adMapper::toDto);
     }
 }
