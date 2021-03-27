@@ -5,6 +5,7 @@ import com.kubel.entity.Ad;
 import com.kubel.exception.ResourceNotFoundException;
 import com.kubel.repo.AccountRepository;
 import com.kubel.repo.AdRepository;
+import com.kubel.repo.specification.AdSpecification;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.mapper.AdMapper;
@@ -54,8 +55,8 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Page<AdDto> getAllAd(Pageable pageable) {
-        Page<Ad> adPage = adRepository.findAll(pageable);
+    public Page<AdDto> getAllAd(AdSpecification adSpecification, Pageable pageable) {
+        Page<Ad> adPage = adRepository.findAll(adSpecification, pageable);
         return adPage.map(adMapper::toDto);
     }
 }

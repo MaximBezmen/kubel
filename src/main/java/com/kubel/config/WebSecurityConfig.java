@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, CONFIRM_URL,"/user/resetPassword*",
-                        "/user/changePassword*").permitAll()
+                        "/user/changePassword*","/ads").permitAll()
                 .antMatchers(HttpMethod.POST, SING_UP_URL, "/user/savePassword").permitAll()
                 .antMatchers(
                         "/**/*.png",
@@ -68,8 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET,"/users/*",
                         "users/*/ads",
-                        "users/*/ads/*/messages",
-                        "/ads").hasAnyAuthority("USER", "ADMIN")
+                        "users/*/ads/*/messages").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET,"/users").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()

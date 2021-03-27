@@ -5,6 +5,7 @@ import com.kubel.security.UserPrincipal;
 import com.kubel.service.AccountService;
 import com.kubel.service.dto.AccountDto;
 import com.kubel.service.dto.PasswordDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +23,8 @@ import java.net.URI;
 public class AccountController {
 
     private final AccountService accountService;
+    @Value("${server.front}")
+    private String server;
 
 
     AccountController(AccountService accountService) {
@@ -37,7 +40,7 @@ public class AccountController {
     @GetMapping("/confirm")
     public ResponseEntity<Void> confirmRegistration(@RequestParam("token") String token) {
         accountService.confirmRegistration(token);
-        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create("http://localhost:3000/user/login")).build();
+        return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT).location(URI.create(server + "/sign_in")).build();
     }
 
     @GetMapping("/users/{id}")
@@ -55,19 +58,19 @@ public class AccountController {
     }
 
     @GetMapping("/user/resetPassword")
-    public ResponseEntity resetPassword(@RequestParam String email) {
+    public ResponseEntity<Void> resetPassword(@RequestParam String email) {
         accountService.resetPassword(email);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/user/changePassword")
-    public ResponseEntity<String> confirmChangePassword(@RequestParam String token){
+    public ResponseEntity<String> confirmChangePassword(@RequestParam String token) {
         accountService.confirmChangePassword(token);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/user/savePassword")
-    public ResponseEntity saveNewPassword(@RequestBody PasswordDto passwordDto){
+    public ResponseEntity<Void> saveNewPassword(@RequestBody PasswordDto passwordDto) {
         accountService.saveNewPassword(passwordDto);
         return ResponseEntity.ok().build();
     }

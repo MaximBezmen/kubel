@@ -1,6 +1,7 @@
 package com.kubel.controllers;
 
 import com.kubel.exception.ForbiddenException;
+import com.kubel.repo.specification.AdSpecification;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
@@ -31,7 +32,7 @@ public class AdController {
         return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
     }
     @GetMapping("/ads")
-    public ResponseEntity<Page<AdDto>> getAllAdd(@PageableDefault Pageable pageable){
-        return ResponseEntity.ok().body(adService.getAllAd(pageable));
+    public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault Pageable pageable){
+        return ResponseEntity.ok().body(adService.getAllAd(adSpecification, pageable));
     }
 }
