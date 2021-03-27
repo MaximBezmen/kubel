@@ -31,7 +31,7 @@ public class AdSpecification implements Specification<Ad> {
         }
         if (Objects.nonNull(topic)) {
             topic = topic.toUpperCase();
-            predicate = builder.and(predicate, builder.like(builder.upper(root.get("topic")), topic));
+            predicate = builder.and(predicate, builder.like(builder.upper(root.get("topic")), "%" + topic + "%"));
         }
         return predicate;
     }
