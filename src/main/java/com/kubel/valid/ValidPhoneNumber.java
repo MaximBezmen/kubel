@@ -1,6 +1,6 @@
 package com.kubel.valid;
 
-import com.kubel.valid.ValidImpl.EmailValidator;
+import com.kubel.valid.ValidImpl.PhoneNumberValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({TYPE, ANNOTATION_TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = EmailValidator.class)
+@Constraint(validatedBy = PhoneNumberValidator.class)
 @Documented
 public @interface ValidPhoneNumber {
     String message() default "Invalid phone number";
