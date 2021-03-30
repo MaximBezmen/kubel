@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-
+    final Logger LOGGER =  Logger.getLogger(String.valueOf(JWTAuthorizationFilter.class));
     private final CustomUserDetailsService customUserDetailsService;
 
     public JWTAuthorizationFilter(CustomUserDetailsService customUserDetailsService) {
@@ -38,8 +38,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch (Exception ex){
-            Logger logger =  Logger.getLogger(String.valueOf(JWTAuthorizationFilter.class));
-            logger.warning("Unauthorized: Authentication token was either missing or invalid.");
+            LOGGER.warning("Unauthorized: Authentication token was either missing or invalid.");
         }
 
         chain.doFilter(request, response);
