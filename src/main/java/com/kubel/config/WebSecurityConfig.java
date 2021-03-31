@@ -67,8 +67,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api-docs/**")
                 .permitAll()
                 .antMatchers(HttpMethod.GET,"/users/*",
-                        "users/*/ads",
-                        "users/*/ads/*/messages").hasAnyAuthority("USER", "ADMIN")
+                        "/users/*/ads",
+                        "/users/*/ads/*/messages", "/users/*/ads").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET,"/users").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()

@@ -9,4 +9,6 @@ public interface AdService {
     AdDto crateAdByUserId(Long id, AdDto adDto);
 
     Page<AdDto> getAllAd(AdSpecification adSpecification, Pageable pageable);
+
+    Page<AdDto> getAllAdByUserId(Long userId, AdSpecification adSpecification, Pageable pageable);
 }
