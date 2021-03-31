@@ -12,7 +12,4 @@ import java.util.List;
 @Repository
 public interface AdRepository extends JpaRepository<Ad,Long>, JpaSpecificationExecutor<Ad> {
     List<Ad> findAllByActiveTrue();
-
-    Page<Ad> findAllByAccountId(Long userId, Pageable pageable);
-
 }

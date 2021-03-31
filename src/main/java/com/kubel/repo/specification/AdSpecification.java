@@ -1,22 +1,27 @@
 package com.kubel.repo.specification;
 
+import com.kubel.entity.Account;
 import com.kubel.entity.Ad;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.Objects;
 
 public class AdSpecification implements Specification<Ad> {
     private String city;
     private String topic;
+    private Long userId;
 
 
-    public AdSpecification(String city, String topic) {
+    public AdSpecification(String city, String topic, Long userId) {
         this.city = city;
         this.topic = topic;
+        this.userId = userId;
+    }
+    private Subquery<Account> getAccountQuery(final CriteriaQuery<?> query, final CriteriaBuilder builder) {
+        var subQuery = query.subquery(Account.class);
+        var subRoot = subQuery.from(Account.class);
+        return subQuery.select(subRoot).where(builder.equal(subRoot.get("id"), userId));
     }
 
 
@@ -24,6 +29,11 @@ public class AdSpecification implements Specification<Ad> {
     public Predicate toPredicate(Root<Ad> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
         var predicate = builder.isTrue(builder.literal(true));
+
+        if (Objects.nonNull(userId)){
+            var accountQuery = getAccountQuery(query, builder);
+            predicate = builder.and(predicate, builder.equal(root.join("account"), accountQuery));
+        }
 
         if (Objects.nonNull(city)) {
             city = city.toUpperCase();
@@ -34,5 +44,9 @@ public class AdSpecification implements Specification<Ad> {
             predicate = builder.and(predicate, builder.like(builder.upper(root.get("topic")), "%" + topic + "%"));
         }
         return predicate;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
