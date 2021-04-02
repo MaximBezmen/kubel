@@ -7,6 +7,7 @@ import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class AdController {
         return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
     }
     @GetMapping("/ads")
-    public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault Pageable pageable){
+    public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault(sort = {"createdDate"}, direction = Sort.Direction.DESC) Pageable pageable){
         return ResponseEntity.ok().body(adService.getAllAd(adSpecification, pageable));
     }
 
