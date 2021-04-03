@@ -1,12 +1,11 @@
 package com.kubel.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import io.jsonwebtoken.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -19,7 +18,7 @@ import java.util.logging.Logger;
 import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    final Logger LOGGER =  Logger.getLogger(String.valueOf(JWTAuthorizationFilter.class));
+    final Logger LOGGER = Logger.getLogger(String.valueOf(JWTAuthorizationFilter.class));
     private final CustomUserDetailsService customUserDetailsService;
 
     public JWTAuthorizationFilter(CustomUserDetailsService customUserDetailsService) {
@@ -37,23 +36,20 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             LOGGER.warning("Unauthorized: Authentication token was either missing or invalid.");
         }
 
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) throws JWTVerificationException {
-        String token = request.getHeader(HEADER_STRING);
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+        String token = getJwtFromRequest(request);
         if (token != null) {
             //parse the token
-            var user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(TOKEN_PREFIX, ""))
-                    .getSubject();
-            if (user != null) {
-                Long userId = Long.parseLong(user);
+            boolean validateToken = validateToken(token);
+            if (validateToken) {
+                Long userId = getUserIdFromToken(token);
                 UserDetails userDetails = customUserDetailsService.loadUserById(userId);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -63,4 +59,39 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
+    private boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(authToken);
+            return true;
+        } catch (SignatureException ex) {
+            logger.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            logger.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            logger.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            logger.error("JWT claims string is empty.");
+        }
+        return false;
+    }
+
+    private Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.getSubject());
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader(HEADER_STRING);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
+            return bearerToken.substring(7, bearerToken.length());
+        }
+        return null;
+    }
+
 }

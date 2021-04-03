@@ -1,10 +1,10 @@
 package com.kubel.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kubel.exception.CustomAuthenticationException;
 import com.kubel.service.dto.AccountDto;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,9 +54,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
 
-        String token = JWT.create().withSubject(((UserPrincipal) authResult.getPrincipal()).getId().toString())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(SECRET.getBytes()));
+        String token = createToken(authResult);
 
         String body = ((UserPrincipal) authResult.getPrincipal()).getId() + " " + TOKEN_PREFIX + token;
         response.getWriter().write(body);
@@ -74,5 +72,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.rememberMeServices.loginFail(request, response);
         this.failureHandler.onAuthenticationFailure(request, response, failed);
 
+    }
+    public String createToken(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
+
+        return Jwts.builder()
+                .setSubject(Long.toString(userPrincipal.getId()))
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .compact();
     }
 }
