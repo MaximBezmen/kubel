@@ -26,10 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String login) {
 
-        Optional<Account> accountOptional = accountRepository.findByLogin(login);
-        if (accountOptional.isEmpty()){
-            accountOptional = accountRepository.findByEmail(login);
-        }
+        Optional<Account> accountOptional = accountRepository.findByLoginOrEmail(login, login);
         if (accountOptional.isEmpty()) {
             throw new UsernameNotFoundException("No user found with username: " + login);
         }
