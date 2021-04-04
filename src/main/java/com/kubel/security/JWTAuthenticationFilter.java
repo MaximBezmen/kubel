@@ -8,7 +8,6 @@ import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -18,12 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private static final Logger LOGGER = Logger.getLogger(String.valueOf(JWTAuthenticationFilter.class));
     private final AuthenticationManager authenticationManager;
-    private RememberMeServices rememberMeServices;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -39,8 +39,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     accountDto.getLogin(),
                     accountDto.getPassword(),
                     new ArrayList<>()));
-        } catch (IOException e) {
-
+        } catch (IOException ex) {
+            LOGGER.warning("Responding with unauthorized error. Message - " + ex.getMessage());
         }
         return null;
     }
@@ -57,7 +57,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().flush();
     }
 
-    public String createToken(Authentication authentication) {
+    private String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
