@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         if (!accountOptional.get().isEnabled()) {
-            throw new BadRequestException("Профиль не активирован.");
+            throw new BadRequestException("Account not activated");
         }
 
         return UserPrincipal.create(accountOptional.get());
