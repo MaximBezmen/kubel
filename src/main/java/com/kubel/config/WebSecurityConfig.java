@@ -1,9 +1,9 @@
 package com.kubel.config;
 
-import com.kubel.security.AuthenticationFailureHandler;
 import com.kubel.security.CustomUserDetailsService;
 import com.kubel.security.JWTAuthenticationFilter;
 import com.kubel.security.JWTAuthorizationFilter;
+import com.kubel.security.RestAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,9 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .csrf()
                 .disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, CONFIRM_URL,"/user/resetPassword*",
-                        "/user/changePassword*","/ads").permitAll()
+                .antMatchers(HttpMethod.GET, CONFIRM_URL, "/user/resetPassword*",
+                        "/user/changePassword*", "/ads").permitAll()
                 .antMatchers(HttpMethod.POST, SING_UP_URL, "/user/savePassword").permitAll()
                 .antMatchers(
                         "/**/*.png",
@@ -66,10 +69,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js",
                         "/api-docs/**")
                 .permitAll()
-                .antMatchers(HttpMethod.GET,"/users/*",
+                .antMatchers(HttpMethod.GET, "/users/*",
                         "/users/*/ads",
                         "/users/*/ads/*/messages", "/users/*/ads").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET,"/users").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

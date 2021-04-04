@@ -1,7 +1,6 @@
 package com.kubel.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kubel.exception.CustomAuthenticationException;
 import com.kubel.service.dto.AccountDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.NullRememberMeServices;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,7 +27,6 @@ import static com.kubel.security.SecurityConstants.*;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private AuthenticationFailureHandler failureHandler;
     private RememberMeServices rememberMeServices;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -45,8 +44,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     accountDto.getPassword(),
                     new ArrayList<>()));
         } catch (IOException e) {
-            throw new CustomAuthenticationException();
+
         }
+        return null;
     }
 
     @Override
@@ -61,18 +61,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().flush();
     }
 
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        SecurityContextHolder.clearContext();
-        this.failureHandler = new AuthenticationFailureHandler();
-        this.rememberMeServices = new NullRememberMeServices();
-        this.logger.trace("Failed to process authentication request", failed);
-        this.logger.trace("Cleared SecurityContextHolder");
-        this.logger.trace("Handling authentication failure");
-        this.rememberMeServices.loginFail(request, response);
-        this.failureHandler.onAuthenticationFailure(request, response, failed);
-
-    }
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
