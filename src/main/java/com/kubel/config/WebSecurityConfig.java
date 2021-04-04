@@ -36,11 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public JWTAuthenticationFilter tokenAuthenticationFilter() throws Exception {
-//        return new JWTAuthenticationFilter(authenticationManager(), customUserDetailsService);
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -81,9 +76,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JWTAuthorizationFilter(customUserDetailsService), UsernamePasswordAuthenticationFilter.class)
                 //this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        //http.addFilterBefore(new JWTAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Override
