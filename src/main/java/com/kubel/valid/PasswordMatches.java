@@ -1,6 +1,6 @@
 package com.kubel.valid;
 
-import com.kubel.valid.ValidImpl.PasswordMatchesValidator;
+import com.kubel.valid.impl.PasswordMatchesValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

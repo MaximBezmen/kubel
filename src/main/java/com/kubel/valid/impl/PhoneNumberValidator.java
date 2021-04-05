@@ -1,4 +1,4 @@
-package com.kubel.valid.ValidImpl;
+package com.kubel.valid.impl;
 
 import com.kubel.service.dto.AdDto;
 import com.kubel.valid.ValidPhoneNumber;

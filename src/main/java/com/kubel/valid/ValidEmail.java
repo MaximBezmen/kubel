@@ -1,9 +1,7 @@
 package com.kubel.valid;
 
 
-import com.kubel.valid.ValidImpl.EmailValidator;
-import com.kubel.valid.ValidImpl.PasswordMatchesValidator;
-import liquibase.pro.packaged.E;
+import com.kubel.valid.impl.EmailValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

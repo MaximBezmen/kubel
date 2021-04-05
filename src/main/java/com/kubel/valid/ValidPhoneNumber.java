@@ -1,6 +1,6 @@
 package com.kubel.valid;
 
-import com.kubel.valid.ValidImpl.PhoneNumberValidator;
+import com.kubel.valid.impl.PhoneNumberValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
