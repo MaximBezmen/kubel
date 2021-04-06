@@ -5,6 +5,7 @@ import com.kubel.service.dto.AccountDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,12 +18,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import static com.kubel.security.SecurityConstants.*;
 
+@Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private static final Logger LOGGER = Logger.getLogger(String.valueOf(JWTAuthenticationFilter.class));
     private final AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -40,7 +40,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     accountDto.getPassword(),
                     new ArrayList<>()));
         } catch (IOException ex) {
-            LOGGER.warning("Responding with unauthorized error. Message - " + ex.getMessage());
+            log.info("Responding with unauthorized error. Message - " + ex.getMessage());
         }
         return null;
     }

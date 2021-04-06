@@ -1,6 +1,7 @@
 package com.kubel.security;
 
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,12 +14,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import static com.kubel.security.SecurityConstants.*;
 
+@Slf4j
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
-    final Logger LOGGER = Logger.getLogger(String.valueOf(JWTAuthorizationFilter.class));
+
     private final CustomUserDetailsService customUserDetailsService;
 
     public JWTAuthorizationFilter(CustomUserDetailsService customUserDetailsService) {
@@ -37,7 +38,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception ex) {
-            LOGGER.warning("Unauthorized: Authentication token was either missing or invalid.");
+            log.info("Unauthorized: Authentication token was either missing or invalid.");
         }
 
         chain.doFilter(request, response);
@@ -65,15 +66,15 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             Jwts.parser().setSigningKey(SECRET).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
+            log.error("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
+            log.error("Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
+            log.error("Expired JWT token");
         } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
+            log.error("Unsupported JWT token");
         } catch (IllegalArgumentException ex) {
-            logger.error("JWT claims string is empty.");
+            log.error("JWT claims string is empty.");
         }
         return false;
     }

@@ -17,8 +17,7 @@ import com.kubel.service.dto.AccountDto;
 import com.kubel.service.dto.PasswordDto;
 import com.kubel.service.mapper.AccountMapper;
 import com.kubel.types.RoleType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Calendar;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class AccountServiceImpl implements AccountService {
-    private final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final ApplicationEventPublisher eventPublisher;
@@ -52,7 +51,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto getUserByLoginAndPassword(AccountDto accountDto) {
         Optional<Account> accountOptional = accountRepository.findByLoginAndPassword(accountDto.getLogin(), accountDto.getPassword());
         if (accountOptional.isEmpty()) {
-            logger.info("User with not found.");
+            log.info("User with not found.");
             throw new ResourceNotFoundException("User with not found.");
         }
         return accountMapper.toDto(accountOptional.get());
@@ -84,7 +83,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDto getUserById(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
         if (accountOptional.isEmpty()) {
-            throw new ResourceNotFoundException("");
+            throw new ResourceNotFoundException("Account", "id", id);
         }
         return accountMapper.toDto(accountOptional.get());
     }
