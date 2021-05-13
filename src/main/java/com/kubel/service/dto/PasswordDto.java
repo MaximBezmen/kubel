@@ -11,10 +11,13 @@ import javax.validation.constraints.NotNull;
 public class PasswordDto {
     @NotNull
     @NotEmpty
-    private String password;
+    private String newPassword;
     @NotNull
     @NotEmpty
-    private String matchingPassword;
+    private String oldPassword;
+    @NotNull
+    @NotEmpty
+    private String matchingNewPassword;
     @NotNull
     @NotEmpty
     private String token;

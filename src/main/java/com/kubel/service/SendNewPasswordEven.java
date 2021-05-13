@@ -7,11 +7,13 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class OnResetPasswordEven extends ApplicationEvent {
+public class SendNewPasswordEven extends ApplicationEvent {
     private Account account;
+    private String newPassword;
 
-    public OnResetPasswordEven(Account account ) {
+    public SendNewPasswordEven(Account account,  String newPassword) {
         super(account);
         this.account = account;
+        this.newPassword = newPassword;
     }
 }

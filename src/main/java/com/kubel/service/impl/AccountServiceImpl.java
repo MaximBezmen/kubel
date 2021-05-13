@@ -13,11 +13,13 @@ import com.kubel.repo.VerificationTokenRepository;
 import com.kubel.service.AccountService;
 import com.kubel.service.OnRegistrationCompleteEvent;
 import com.kubel.service.OnResetPasswordEven;
+import com.kubel.service.SendNewPasswordEven;
 import com.kubel.service.dto.AccountDto;
 import com.kubel.service.dto.PasswordDto;
 import com.kubel.service.mapper.AccountMapper;
 import com.kubel.types.RoleType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -146,7 +148,10 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("Срок действия токина истек.");
         }
         accountEntity.setEnabled(true);
+        String newPassword = generateRandomSpecialCharacters(6);
+        accountEntity.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(accountEntity);
+        eventPublisher.publishEvent(new SendNewPasswordEven(accountEntity, newPassword));
         return token;
     }
 
@@ -161,7 +166,15 @@ public class AccountServiceImpl implements AccountService {
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             throw new BadRequestException("Срок действия токина истек.");
         }
-        accountEntity.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
+        if (!passwordEncoder.matches(accountEntity.getPassword(),passwordDto.getOldPassword())){
+            throw new BadRequestException("Старый пароль не верный.");
+        }
+        accountEntity.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         accountRepository.save(accountEntity);
+    }
+    private String generateRandomSpecialCharacters(int length) {
+        RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 45)
+                .build();
+        return pwdGenerator.generate(length);
     }
 }
