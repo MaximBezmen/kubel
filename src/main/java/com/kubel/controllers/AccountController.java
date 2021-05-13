@@ -70,8 +70,9 @@ public class AccountController {
     }
 
     @PostMapping("/user/savePassword")
-    public ResponseEntity<Void> saveNewPassword(@RequestBody PasswordDto passwordDto) {
-        accountService.saveNewPassword(passwordDto);
+    public ResponseEntity<Void> saveNewPassword(@RequestBody PasswordDto passwordDto, Authentication auth) {
+        var principal = (UserPrincipal) auth.getPrincipal();
+        accountService.saveNewPassword(passwordDto, principal.getId());
         return ResponseEntity.ok().build();
     }
 }

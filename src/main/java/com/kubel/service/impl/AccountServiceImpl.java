@@ -156,21 +156,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void saveNewPassword(PasswordDto passwordDto) {
-        VerificationToken verificationToken = tokenRepository.findByToken(passwordDto.getToken());
-        if (verificationToken == null) {
-            throw new ResourceNotFoundException(passwordDto.getToken());
+    public void saveNewPassword(PasswordDto passwordDto, Long userId) {
+        Optional<Account> accountEntity = accountRepository.findById(userId);
+        if (accountEntity.isPresent()){
+            if (!passwordEncoder.matches(accountEntity.get().getPassword(),passwordDto.getOldPassword())){
+                throw new BadRequestException("Старый пароль не верный.");
+            }
         }
-        Account accountEntity = verificationToken.getAccount();
-        Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            throw new BadRequestException("Срок действия токина истек.");
-        }
-        if (!passwordEncoder.matches(accountEntity.getPassword(),passwordDto.getOldPassword())){
-            throw new BadRequestException("Старый пароль не верный.");
-        }
-        accountEntity.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
-        accountRepository.save(accountEntity);
+
+        accountEntity.get().setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        accountRepository.save(accountEntity.get());
     }
     private String generateRandomSpecialCharacters(int length) {
         RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 45)

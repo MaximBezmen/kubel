@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, CONFIRM_URL, "/user/resetPassword*",
                         "/user/changePassword*", "/ads").permitAll()
-                .antMatchers(HttpMethod.POST, SING_UP_URL, "/user/savePassword").permitAll()
+                .antMatchers(HttpMethod.POST, SING_UP_URL, "/user/savePassword").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(
                         "/**/*.png",
                         "/**/*.gif",

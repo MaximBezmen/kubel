@@ -6,7 +6,6 @@ import com.kubel.service.dto.PasswordDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Locale;
 
 public interface AccountService {
 
@@ -28,5 +27,5 @@ public interface AccountService {
 
     String confirmChangePassword(String token);
 
-    void saveNewPassword(PasswordDto passwordDto);
+    void saveNewPassword(PasswordDto passwordDto, Long id);
 }
