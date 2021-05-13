@@ -158,8 +158,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void saveNewPassword(PasswordDto passwordDto, Long userId) {
         Optional<Account> accountEntity = accountRepository.findById(userId);
-        if (accountEntity.isPresent()){
-            if (!passwordEncoder.matches(accountEntity.get().getPassword(),passwordDto.getOldPassword())){
+        if (accountEntity.isPresent()) {
+            if (!passwordEncoder.matches(passwordDto.getOldPassword(), accountEntity.get().getPassword())) {
                 throw new BadRequestException("Старый пароль не верный.");
             }
         }
@@ -167,6 +167,7 @@ public class AccountServiceImpl implements AccountService {
         accountEntity.get().setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         accountRepository.save(accountEntity.get());
     }
+
     private String generateRandomSpecialCharacters(int length) {
         RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 45)
                 .build();
