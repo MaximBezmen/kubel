@@ -10,6 +10,7 @@ import com.kubel.repo.specification.AdSpecification;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.mapper.AdMapper;
+import com.kubel.types.RoleType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdServiceImpl implements AdService {
@@ -70,10 +72,19 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public void deleteAdById(Long adId, Long userId) {
-        Ad adEntity = adRepository.findByIdAndAccountId(adId, userId);
-        if (adEntity == null){
+        Optional<Ad> adOptional = Optional.empty();
+        Optional<Account> accountOptional = accountRepository.findById(userId);
+        if (accountOptional.isPresent()){
+            if (accountOptional.get().getRole().getRoleName().equals(RoleType.ADMIN)){
+                adOptional = adRepository.findById(adId);
+            } else {
+                adOptional = adRepository.findByIdAndAccountId(adId, userId);
+            }
+        }
+
+        if (adOptional.isEmpty()){
             throw new BadRequestException("Ad not found");
         }
-        adRepository.delete(adEntity);
+        adRepository.delete(adOptional.get());
     }
 }
