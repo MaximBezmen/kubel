@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/users/*/ads",
                         "/users/*/ads/*/messages", "/users/*/ads", "/user/savePassword").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET, "/users").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/ad/*").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -45,4 +45,10 @@ public class AdController {
         }
         return ResponseEntity.ok().body(adService.getAllAdByUserId(userId, adSpecification, pageable));
     }
+    @DeleteMapping("/ads/{id}")
+    public ResponseEntity<Void> deleteAdById(@PathVariable final Long id, final Authentication auth){
+        var principal = (UserPrincipal)auth.getPrincipal();
+        adService.deleteAdById(id, principal.getId());
+        return ResponseEntity.ok().build();
+    }
 }

@@ -12,4 +12,6 @@ import java.util.List;
 @Repository
 public interface AdRepository extends JpaRepository<Ad,Long>, JpaSpecificationExecutor<Ad> {
     List<Ad> findAllByActiveTrue();
+
+    Ad findByIdAndAccountId(Long adId, Long userId);
 }

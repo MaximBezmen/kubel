@@ -2,6 +2,7 @@ package com.kubel.service.impl;
 
 import com.kubel.entity.Account;
 import com.kubel.entity.Ad;
+import com.kubel.exception.BadRequestException;
 import com.kubel.exception.ResourceNotFoundException;
 import com.kubel.repo.AccountRepository;
 import com.kubel.repo.AdRepository;
@@ -65,5 +66,14 @@ public class AdServiceImpl implements AdService {
         adSpecification.setUserId(userId);
         Page<Ad> adPage = adRepository.findAll(adSpecification, pageable);
         return adPage.map(adMapper::toDto);
+    }
+
+    @Override
+    public void deleteAdById(Long adId, Long userId) {
+        Ad adEntity = adRepository.findByIdAndAccountId(adId, userId);
+        if (adEntity == null){
+            throw new BadRequestException("Ad not found");
+        }
+        adRepository.delete(adEntity);
     }
 }
