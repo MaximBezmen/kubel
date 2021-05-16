@@ -38,6 +38,8 @@ public class Ad extends AbstractEntity {
     private List<Message> messages;
     @Column(name = "active")
     private Boolean active;
+    @Column(name = "photo_path")
+    private String photoPath;
 
 
     @PrePersist

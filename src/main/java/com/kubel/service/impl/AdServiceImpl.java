@@ -11,11 +11,16 @@ import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.mapper.AdMapper;
 import com.kubel.types.RoleType;
+import com.kubel.utils.FileUploadUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -34,14 +39,40 @@ public class AdServiceImpl implements AdService {
         this.accountRepository = accountRepository;
     }
 
-    @Override
-    public AdDto crateAdByUserId(Long id, AdDto dto) {
-        Ad adEntity = adMapper.toEntity(dto);
-        Account accountEntity = accountRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Account", "id", id));
-        adEntity.setAccount(accountEntity);
-        return adMapper.toDto(adRepository.save(adEntity));
+//    @Override
+//    public AdDto crateAdByUserId(Long id, AdDto dto, MultipartFile photo) throws IOException {
+//        Account accountEntity = accountRepository.findById(id).orElseThrow(
+//                () -> new ResourceNotFoundException("Account", "id", id));
+//        String fileName = null;
+//        String uploadDir = null;
+//        if (photo != null){
+//             fileName = StringUtils.cleanPath(photo.getOriginalFilename());
+//           uploadDir = "ad-photos/" + accountEntity.getId();
+//        }
+//
+//        Ad adEntity = adMapper.toEntity(dto);
+//        if (photo != null){
+//            adEntity.setPhotoPath(FileUploadUtil.saveFile(uploadDir, fileName, photo));
+//        }
+//        adEntity.setAccount(accountEntity);
+//        return adMapper.toDto(adRepository.save(adEntity));
+//    }
+@Override
+public AdDto crateAdByUserId(Long id, AdDto dto) throws IOException {
+    Account accountEntity = accountRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("Account", "id", id));
+    String uploadDir = null;
+    if (dto.getPhoto() != null){
+        uploadDir = "ad-photos/" + accountEntity.getId();
     }
+
+    Ad adEntity = adMapper.toEntity(dto);
+    if (dto.getPhoto() != null){
+        adEntity.setPhotoPath(FileUploadUtil.saveFile(uploadDir, dto.getPhoto()));
+    }
+    adEntity.setAccount(accountEntity);
+    return adMapper.toDto(adRepository.save(adEntity));
+}
 
     @Scheduled(cron = "* 0 0 * * ?", zone = "Europe/Minsk")
     private void checkValidityAd() {

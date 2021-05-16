@@ -110,4 +110,11 @@
             <column name="price" type="bigint" remarks="Price of ad"/>
         </addColumn>
     </changeSet>
+    <changeSet id="20210516" author="Maxim Bezmen">
+        <addColumn tableName="ad">
+            <column name="photo_path" type="varchar(200)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

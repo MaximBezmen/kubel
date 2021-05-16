@@ -2,6 +2,7 @@ package com.kubel.service.dto;
 
 import com.kubel.valid.ValidPhoneNumber;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -18,4 +19,5 @@ public class AdDto {
     private String phoneNumber;
     private Long price;
     private Long accountId;
+    private MultipartFile photo;
 }

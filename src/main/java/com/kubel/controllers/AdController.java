@@ -12,8 +12,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 public class AdController {
@@ -24,14 +26,22 @@ public class AdController {
         this.adService = adService;
     }
 
-    @PostMapping("/users/{id}/ads")
-    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @RequestBody @Valid AdDto adDto, final Authentication auth){
-        var principal = (UserPrincipal)auth.getPrincipal();
-        if (!principal.getId().equals(id)){
-            throw new ForbiddenException();
-        }
-        return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
+//    @PostMapping("/users/{id}/ads")
+//    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth, @RequestParam(value = "image", required = false) MultipartFile photo) throws IOException {
+//        var principal = (UserPrincipal)auth.getPrincipal();
+//        if (!principal.getId().equals(id)){
+//            throw new ForbiddenException();
+//        }
+//        return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto, photo));
+//    }
+@PostMapping("/users/{id}/ads")
+public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth) throws IOException {
+    var principal = (UserPrincipal)auth.getPrincipal();
+    if (!principal.getId().equals(id)){
+        throw new ForbiddenException();
     }
+    return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
+}
     @GetMapping("/ads")
     public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault(sort = {"createdDate"}, direction = Sort.Direction.DESC) Pageable pageable){
         return ResponseEntity.ok().body(adService.getAllAd(adSpecification, pageable));
