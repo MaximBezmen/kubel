@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface AdService {
-//    AdDto crateAdByUserId(Long id, AdDto adDto, MultipartFile photo) throws IOException;
     AdDto crateAdByUserId(Long id, AdDto adDto) throws IOException;
 
     Page<AdDto> getAllAd(AdSpecification adSpecification, Pageable pageable);

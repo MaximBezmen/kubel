@@ -12,7 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -26,38 +25,32 @@ public class AdController {
         this.adService = adService;
     }
 
-//    @PostMapping("/users/{id}/ads")
-//    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth, @RequestParam(value = "image", required = false) MultipartFile photo) throws IOException {
-//        var principal = (UserPrincipal)auth.getPrincipal();
-//        if (!principal.getId().equals(id)){
-//            throw new ForbiddenException();
-//        }
-//        return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto, photo));
-//    }
-@PostMapping("/users/{id}/ads")
-public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth) throws IOException {
-    var principal = (UserPrincipal)auth.getPrincipal();
-    if (!principal.getId().equals(id)){
-        throw new ForbiddenException();
+    @PostMapping("/users/{id}/ads")
+    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth) throws IOException {
+        var principal = (UserPrincipal) auth.getPrincipal();
+        if (!principal.getId().equals(id)) {
+            throw new ForbiddenException();
+        }
+        return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
     }
-    return ResponseEntity.ok().body(adService.crateAdByUserId(id, adDto));
-}
+
     @GetMapping("/ads")
-    public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault(sort = {"createdDate"}, direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<Page<AdDto>> getAllAdd(AdSpecification adSpecification, @PageableDefault(sort = {"createdDate"}, direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok().body(adService.getAllAd(adSpecification, pageable));
     }
 
     @GetMapping("/users/{userId}/ads")
-    public ResponseEntity<Page<AdDto>> getAllAddByUserId(@PathVariable final Long userId, AdSpecification adSpecification, @PageableDefault Pageable pageable, final Authentication auth){
-        var principal = (UserPrincipal)auth.getPrincipal();
-        if (!principal.getId().equals(userId)){
+    public ResponseEntity<Page<AdDto>> getAllAddByUserId(@PathVariable final Long userId, AdSpecification adSpecification, @PageableDefault Pageable pageable, final Authentication auth) {
+        var principal = (UserPrincipal) auth.getPrincipal();
+        if (!principal.getId().equals(userId)) {
             throw new ForbiddenException();
         }
         return ResponseEntity.ok().body(adService.getAllAdByUserId(userId, adSpecification, pageable));
     }
+
     @DeleteMapping("/ads/{id}")
-    public ResponseEntity<Void> deleteAdById(@PathVariable final Long id, final Authentication auth){
-        var principal = (UserPrincipal)auth.getPrincipal();
+    public ResponseEntity<Void> deleteAdById(@PathVariable final Long id, final Authentication auth) {
+        var principal = (UserPrincipal) auth.getPrincipal();
         adService.deleteAdById(id, principal.getId());
         return ResponseEntity.ok().build();
     }
