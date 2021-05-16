@@ -16,9 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -39,7 +36,7 @@ public class AdServiceImpl implements AdService {
         this.accountRepository = accountRepository;
     }
 
-//    @Override
+    //    @Override
 //    public AdDto crateAdByUserId(Long id, AdDto dto, MultipartFile photo) throws IOException {
 //        Account accountEntity = accountRepository.findById(id).orElseThrow(
 //                () -> new ResourceNotFoundException("Account", "id", id));
@@ -57,22 +54,22 @@ public class AdServiceImpl implements AdService {
 //        adEntity.setAccount(accountEntity);
 //        return adMapper.toDto(adRepository.save(adEntity));
 //    }
-@Override
-public AdDto crateAdByUserId(Long id, AdDto dto) throws IOException {
-    Account accountEntity = accountRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("Account", "id", id));
-    String uploadDir = null;
-    if (dto.getPhoto() != null){
-        uploadDir = "ad-photos/" + accountEntity.getId();
-    }
+    @Override
+    public AdDto crateAdByUserId(Long id, AdDto dto) throws IOException {
+        Account accountEntity = accountRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "id", id));
+        String uploadDir = null;
+        if (dto.getPhoto() != null) {
+            uploadDir = "ad-photos/" + accountEntity.getId();
+        }
 
-    Ad adEntity = adMapper.toEntity(dto);
-    if (dto.getPhoto() != null){
-        adEntity.setPhotoPath(FileUploadUtil.saveFile(uploadDir, dto.getPhoto()));
+        Ad adEntity = adMapper.toEntity(dto);
+        if (dto.getPhoto() != null) {
+            adEntity.setPhotoPath(FileUploadUtil.saveFile(uploadDir, dto.getPhoto()));
+        }
+        adEntity.setAccount(accountEntity);
+        return adMapper.toDto(adRepository.save(adEntity));
     }
-    adEntity.setAccount(accountEntity);
-    return adMapper.toDto(adRepository.save(adEntity));
-}
 
     @Scheduled(cron = "* 0 0 * * ?", zone = "Europe/Minsk")
     private void checkValidityAd() {
@@ -105,15 +102,15 @@ public AdDto crateAdByUserId(Long id, AdDto dto) throws IOException {
     public void deleteAdById(Long adId, Long userId) {
         Optional<Ad> adOptional = Optional.empty();
         Optional<Account> accountOptional = accountRepository.findById(userId);
-        if (accountOptional.isPresent()){
-            if (accountOptional.get().getRole().getRoleName().equals(RoleType.ADMIN)){
+        if (accountOptional.isPresent()) {
+            if (accountOptional.get().getRole().getRoleName().equals(RoleType.ADMIN)) {
                 adOptional = adRepository.findById(adId);
             } else {
                 adOptional = adRepository.findByIdAndAccountId(adId, userId);
             }
         }
 
-        if (adOptional.isEmpty()){
+        if (adOptional.isEmpty()) {
             throw new BadRequestException("Ad not found");
         }
         adRepository.delete(adOptional.get());

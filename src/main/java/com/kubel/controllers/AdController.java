@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class AdController {
         return ResponseEntity.ok().body(adService.getAllAd(adSpecification, pageable));
     }
 
-    @GetMapping("/users/{userId}/ads")
+    @GetMapping(value = "/users/{userId}/ads", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<AdDto>> getAllAddByUserId(@PathVariable final Long userId, AdSpecification adSpecification, @PageableDefault Pageable pageable, final Authentication auth) {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(userId)) {
