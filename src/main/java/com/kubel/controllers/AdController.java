@@ -5,6 +5,7 @@ import com.kubel.repo.specification.AdSpecification;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
+import com.kubel.service.dto.AdPhotoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,13 +51,13 @@ public class AdController {
     }
 
     @DeleteMapping("/ads/{id}")
-    public ResponseEntity<Void> deleteAdById(@PathVariable final Long id, final Authentication auth) {
+    public ResponseEntity<Void> deleteAdById(@PathVariable final Long id, final Authentication auth) throws IOException {
         var principal = (UserPrincipal) auth.getPrincipal();
         adService.deleteAdById(id, principal.getId());
         return ResponseEntity.ok().build();
     }
-    @GetMapping("/ads/{id}")
-    public ResponseEntity<AdDto> getAdById(@PathVariable Long id) {
+    @GetMapping(value = "/ads/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.IMAGE_JPEG_VALUE})
+    public ResponseEntity<AdPhotoDto> getAdById(@PathVariable Long id) throws IOException {
         return ResponseEntity.ok().body(adService.getAdById(id));
     }
 }

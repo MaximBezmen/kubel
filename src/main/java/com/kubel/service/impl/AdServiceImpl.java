@@ -9,8 +9,11 @@ import com.kubel.repo.AdRepository;
 import com.kubel.repo.specification.AdSpecification;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;
+import com.kubel.service.dto.AdPhotoDto;
 import com.kubel.service.mapper.AdMapper;
+import com.kubel.service.mapper.AdPhotoMapper;
 import com.kubel.types.RoleType;
+import com.kubel.utils.FileDownlandUtil;
 import com.kubel.utils.FileUploadUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,11 +32,13 @@ public class AdServiceImpl implements AdService {
     private final AdMapper adMapper;
     private final AdRepository adRepository;
     private final AccountRepository accountRepository;
+    private AdPhotoMapper adPhotoMapper;
 
-    public AdServiceImpl(AdMapper adMapper, AdRepository adRepository, AccountRepository accountRepository) {
+    public AdServiceImpl(AdMapper adMapper, AdRepository adRepository, AccountRepository accountRepository, AdPhotoMapper adPhotoMapper) {
         this.adMapper = adMapper;
         this.adRepository = adRepository;
         this.accountRepository = accountRepository;
+        this.adPhotoMapper = adPhotoMapper;
     }
 
     @Override
@@ -99,13 +104,13 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdDto getAdById(Long id) {
+    public AdPhotoDto getAdById(Long id) throws IOException {
         Optional<Ad> optionalAd = adRepository.findById(id);
-        if (optionalAd.isEmpty()){
+        if (optionalAd.isEmpty()) {
             throw new ResourceNotFoundException("Ad", "id", id);
         }
-        AdDto adDto = adMapper.toDto(optionalAd.get());
-
-        return  adDto;
+        AdPhotoDto adPhotoDto = adPhotoMapper.toDto(optionalAd.get());
+        adPhotoDto.setPhoto(FileDownlandUtil.addFileToDto(optionalAd.get().getPhotoPath()));
+        return adPhotoDto;
     }
 }
