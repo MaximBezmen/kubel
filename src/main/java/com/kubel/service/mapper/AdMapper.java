@@ -12,5 +12,6 @@ public interface AdMapper {
     Ad toEntity(AdDto dto);
 
     @Mapping(target = "accountId", source = "account.id")
+    @Mapping(target = "photo", ignore = true)
     AdDto toDto(Ad entity);
 }

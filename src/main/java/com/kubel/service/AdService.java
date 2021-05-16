@@ -16,4 +16,6 @@ public interface AdService {
     Page<AdDto> getAllAdByUserId(Long userId, AdSpecification adSpecification, Pageable pageable);
 
     void deleteAdById(Long adId, Long userId);
+
+    AdDto getAdById(Long id);
 }

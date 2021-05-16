@@ -55,4 +55,8 @@ public class AdController {
         adService.deleteAdById(id, principal.getId());
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/ads/{id}")
+    public ResponseEntity<AdDto> getAdById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(adService.getAdById(id));
+    }
 }

@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, CONFIRM_URL, "/user/resetPassword*",
-                        "/user/changePassword*", "/ads").permitAll()
+                        "/user/changePassword*", "/ads", "/ads/*").permitAll()
                 .antMatchers(HttpMethod.POST, SING_UP_URL ).permitAll()
                 .antMatchers(
                         "/**/*.png",

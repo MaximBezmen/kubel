@@ -36,24 +36,6 @@ public class AdServiceImpl implements AdService {
         this.accountRepository = accountRepository;
     }
 
-    //    @Override
-//    public AdDto crateAdByUserId(Long id, AdDto dto, MultipartFile photo) throws IOException {
-//        Account accountEntity = accountRepository.findById(id).orElseThrow(
-//                () -> new ResourceNotFoundException("Account", "id", id));
-//        String fileName = null;
-//        String uploadDir = null;
-//        if (photo != null){
-//             fileName = StringUtils.cleanPath(photo.getOriginalFilename());
-//           uploadDir = "ad-photos/" + accountEntity.getId();
-//        }
-//
-//        Ad adEntity = adMapper.toEntity(dto);
-//        if (photo != null){
-//            adEntity.setPhotoPath(FileUploadUtil.saveFile(uploadDir, fileName, photo));
-//        }
-//        adEntity.setAccount(accountEntity);
-//        return adMapper.toDto(adRepository.save(adEntity));
-//    }
     @Override
     public AdDto crateAdByUserId(Long id, AdDto dto) throws IOException {
         Account accountEntity = accountRepository.findById(id).orElseThrow(
@@ -114,5 +96,16 @@ public class AdServiceImpl implements AdService {
             throw new BadRequestException("Ad not found");
         }
         adRepository.delete(adOptional.get());
+    }
+
+    @Override
+    public AdDto getAdById(Long id) {
+        Optional<Ad> optionalAd = adRepository.findById(id);
+        if (optionalAd.isEmpty()){
+            throw new ResourceNotFoundException("Ad", "id", id);
+        }
+        AdDto adDto = adMapper.toDto(optionalAd.get());
+
+        return  adDto;
     }
 }
