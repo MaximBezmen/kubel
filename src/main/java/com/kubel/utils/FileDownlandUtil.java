@@ -16,4 +16,10 @@ public class FileDownlandUtil {
         InputStream in = new FileInputStream(path);
         return IOUtils.toByteArray(in);
     }
+
+//    public  byte[] getImageWithMediaType(String imageName) throws IOException {
+//        Path destination =   Paths.get(storageDirectoryPath+"\\"+imageName);// retrieve the image by its name
+//
+//        return IOUtils.toByteArray(destination.toUri());
+//    }
 }

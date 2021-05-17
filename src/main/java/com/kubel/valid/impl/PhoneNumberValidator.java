@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, Object> {
     private Pattern pattern;
     private Matcher matcher;
-    private static final String PHONE_NUMBER_PATTERN = "^\\D*(?:\\d\\D*){12,}$";
+    private static final String PHONE_NUMBER_PATTERN = "^\\+375\\((17|29|33|44)\\)-[0-9]{3}-[0-9]{2}-[0-9]{2}$";
 
     @Override
     public void initialize(ValidPhoneNumber constraintAnnotation) {
