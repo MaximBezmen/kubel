@@ -27,7 +27,7 @@ public class AdController {
         this.adService = adService;
     }
 
-    @PostMapping("/users/{id}/ads")
+    @PostMapping(value = "/users/{id}/ads", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth) throws IOException {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(id)) {
