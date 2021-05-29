@@ -22,6 +22,9 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         pattern = Pattern.compile(PHONE_NUMBER_PATTERN);
         AdDto adDto = (AdDto) value;
+        if (adDto.getPhoto() == null) {
+            return false;
+        }
         matcher = pattern.matcher(adDto.getPhoneNumber());
         return matcher.matches();
     }
