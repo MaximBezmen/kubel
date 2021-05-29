@@ -1,38 +1,41 @@
 package com.kubel.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
+import java.util.Base64;
 
 public class FileUploadUtil {
-    private FileUploadUtil(){
+    private FileUploadUtil() {
 
     }
-    public static String saveFile(String uploadDir, MultipartFile multipartFile) throws IOException {
+
+    public static String saveFile(String uploadDir, String file) throws IOException {
         Path uploadPath = Paths.get(uploadDir);
         String fileName = RandomStringUtils.randomAlphabetic(10);
-        if (Objects.requireNonNull(multipartFile.getContentType()).equalsIgnoreCase("image/jpeg")){
-            fileName = fileName +".jpg";
-        }else {
+        if (file.contains("data:image/jpeg;")) {
+            fileName = fileName + ".jpg";
+        } else {
             fileName = fileName + ".png";
         }
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
+        String s = uploadPath.toAbsolutePath() + "\\" + fileName;
 
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            return filePath.toAbsolutePath().toString();
-        } catch (IOException ioe) {
-            throw new IOException("Could not save image file: " + fileName, ioe);
+        String partSeparator = ",";
+        if (file.contains(partSeparator)) {
+            String encodedImg = file.split(partSeparator)[1];
+            byte[] decodedImg = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));
+            FileUtils.writeByteArrayToFile(new File(s), decodedImg);
+
         }
+        return s;
     }
 }

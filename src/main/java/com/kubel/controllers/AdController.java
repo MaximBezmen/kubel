@@ -27,8 +27,8 @@ public class AdController {
         this.adService = adService;
     }
 
-    @PostMapping(value = "/users/{id}/ads", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @ModelAttribute @Valid AdDto adDto, final Authentication auth) throws IOException {
+    @PostMapping(value = "/users/{id}/ads", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<AdDto> crateAdByUserId(@PathVariable final Long id, @RequestBody @Valid AdDto adDto, final Authentication auth) throws IOException {
         var principal = (UserPrincipal) auth.getPrincipal();
         if (!principal.getId().equals(id)) {
             throw new ForbiddenException();
@@ -56,6 +56,7 @@ public class AdController {
         adService.deleteAdById(id, principal.getId());
         return ResponseEntity.ok().build();
     }
+
     @GetMapping(value = "/ads/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.IMAGE_JPEG_VALUE})
     public ResponseEntity<AdPhotoDto> getAdById(@PathVariable Long id) throws IOException {
         return ResponseEntity.ok().body(adService.getAdById(id));
