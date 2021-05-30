@@ -27,15 +27,15 @@ public class FileUploadUtil {
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        String s = uploadPath.toAbsolutePath() + "\\" + fileName;
+        String pathToFile = uploadPath.toAbsolutePath() + "\\" + fileName;
 
-        String partSeparator = ",";
+        var partSeparator = ",";
         if (file.contains(partSeparator)) {
             String encodedImg = file.split(partSeparator)[1];
             byte[] decodedImg = Base64.getDecoder().decode(encodedImg.getBytes(StandardCharsets.UTF_8));
-            FileUtils.writeByteArrayToFile(new File(s), decodedImg);
+            FileUtils.writeByteArrayToFile(new File(pathToFile), decodedImg);
 
         }
-        return s;
+        return pathToFile;
     }
 }
