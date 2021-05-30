@@ -1,7 +1,7 @@
 package com.kubel.controllers;
 
 import com.kubel.exception.ForbiddenException;
-import com.kubel.repo.specification.AdSpecification;
+import com.kubel.repository.specification.AdSpecification;
 import com.kubel.security.UserPrincipal;
 import com.kubel.service.AdService;
 import com.kubel.service.dto.AdDto;

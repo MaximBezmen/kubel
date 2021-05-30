@@ -1,6 +1,5 @@
-package com.kubel.repo;
+package com.kubel.repository;
 
-import com.kubel.entity.Account;
 import com.kubel.entity.VerificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package com.kubel.repo.specification;
+package com.kubel.repository.specification;
 
 import com.kubel.entity.Account;
 import com.kubel.entity.Ad;

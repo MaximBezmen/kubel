@@ -1,11 +1,10 @@
 package com.kubel.service;
 
-import com.kubel.repo.specification.AdSpecification;
+import com.kubel.repository.specification.AdSpecification;
 import com.kubel.service.dto.AdDto;
 import com.kubel.service.dto.AdPhotoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 

@@ -17,9 +17,9 @@ public class FileDownlandUtil {
         return IOUtils.toByteArray(in);
     }
 
-//    public  byte[] getImageWithMediaType(String imageName) throws IOException {
-//        Path destination =   Paths.get(storageDirectoryPath+"\\"+imageName);// retrieve the image by its name
-//
-//        return IOUtils.toByteArray(destination.toUri());
+//    public static String addFileToDto(String path) throws IOException {
+//        byte[] fileContent = FileUtils.readFileToByteArray(new File(path));
+//        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+//        return encodedString;
 //    }
 }

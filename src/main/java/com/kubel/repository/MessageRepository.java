@@ -1,4 +1,4 @@
-package com.kubel.repo;
+package com.kubel.repository;
 
 import com.kubel.entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,7 +3,7 @@ package com.kubel.security;
 import com.kubel.entity.Account;
 import com.kubel.exception.BadRequestException;
 import com.kubel.exception.ResourceNotFoundException;
-import com.kubel.repo.AccountRepository;
+import com.kubel.repository.AccountRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
